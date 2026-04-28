@@ -6,5 +6,5 @@ set "maindir=C:\ProgramData\VoltEnhanced"
 if exist "%maindir%\pysetup.bat" (
     call "%maindir%\pysetup.bat"
 ) else (
-    echo did the installer mess up? the required file(s) dont exist.
+    echo did the installer mess up? the required files dont exist.
 )
