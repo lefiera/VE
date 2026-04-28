@@ -1,6 +1,5 @@
 @echo off
 setlocal enabledelayedexpansion
-
 set "main=C:\ProgramData\VoltEnhanced"
 
 if defined PROCESSOR_ARCHITEW6432 (
