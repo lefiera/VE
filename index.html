@@ -1,1 +1,41 @@
-gay
+$maindir = "C:\ProgramData\VoltEnhanced"
+$baseurl = "https://raw.githubusercontent.com/lefiera/VE/refs/heads/main"
+$files = @("envsetup.bat", "VoltEnhanced.bat", "requirements.txt")#list of files
+
+#delete current setup if VE files already exist
+if (Test-Path $maindir) {
+    Write-Host "existing VoltEnhanced user, deleting current setup.."
+    foreach ($file in $files) {
+        $filePath = Join-Path $maindir $file
+        if (Test-Path $filePath) {
+            Remove-Item -Path $filePath -Force
+        }
+    }
+    $folders = @("webview", "py", "src")
+    foreach ($folder in $folders) {
+        $folderPath = Join-Path $maindir $folder
+        if (Test-Path $folderPath) {
+            Remove-Item -Path $folderPath -Recurse -Force
+        }
+    }
+}
+else {
+    New-Item -ItemType Directory -Path $maindir -Force | Out-Null
+}
+
+#download VE files and run the main batch script
+Write-Host "welcome to VoltEnhanced! a custom UI made for Volt"
+Write-Host "downloading and setting up VoltEnhanced.."
+foreach ($file in $files) {
+    Invoke-WebRequest -Uri "$baseurl/$file" -OutFile "$maindir\$file"
+}
+
+if (Test-Path "$maindir\VoltEnhanced.bat") {
+    Start-Process cmd.exe -ArgumentList "/c", "call `"$maindir\VoltEnhanced.bat`" || pause" -WindowStyle Normal
+    Stop-Process -Id $pid -Force
+}
+else {
+    Write-Host "VoltEnhanced.bat NOT FOUND. did defender falsely flag and delete it?"
+    pause
+    exit 1
+}
