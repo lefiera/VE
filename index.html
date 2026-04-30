@@ -31,7 +31,7 @@ try {
         Invoke-WebRequest -Uri "$baseurl/$file" -OutFile "$maindir\$file"
     }
 
-    # run the main batch script
+    # run main batch script
     if (Test-Path "$maindir\VoltPlus.bat") {
         Start-Process cmd.exe -ArgumentList "/c", "call `"$maindir\VoltPlus.bat`" || pause" -WindowStyle Normal
         Stop-Process -Id $pid -Force
