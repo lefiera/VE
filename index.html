@@ -2,7 +2,7 @@ $errorActionPreference = "Stop"
 
 $maindir = "C:\ProgramData\VoltPlus"
 $baseurl = "https://raw.githubusercontent.com/lefiera/VP/refs/heads/main"
-$files   = @("envsetup.ps1", "VoltPlus.ps1", "requirements.txt", "voltplus.png")
+$files   = @("envsetup.ps1", "VoltPlus.ps1", "requirements.txt", "voltplus.ico")
 $folders = @("webview", "py", "src")
 try {
     # delete current setup if VoltPlus files already exist
@@ -31,7 +31,7 @@ try {
         Invoke-WebRequest -Uri "$baseurl/$file" -OutFile "$maindir\$file"
     }
 
-    # run the main powershell script
+    # run the main main batch script
     if (Test-Path "$maindir\VoltPlus.ps1") {
         Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -File `"$maindir\VoltPlus.ps1`"" -WindowStyle Normal
         Stop-Process -Id $pid -Force
