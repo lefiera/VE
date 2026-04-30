@@ -1,40 +1,73 @@
-$maindir = "C:\ProgramData\VoltEnhanced"
-$baseurl = "https://raw.githubusercontent.com/lefiera/VE/refs/heads/main"
-$files = @("envsetup.bat", "VoltEnhanced.bat", "requirements.txt")#list of files
+$errorActionPreference = "Stop"
 
-#delete current setup if VE files already exist
-if (Test-Path $maindir) {
-    Write-Host "existing VoltEnhanced user, deleting current setup.."
+$maindir = "C:\ProgramData\VoltPlus"
+$baseurl = "https://raw.githubusercontent.com/lefiera/VP/refs/heads/main"
+$files   = @("envsetup.ps1", "VoltPlus.ps1", "requirements.txt", "voltplus.png")
+$folders = @("webview", "py", "src")
+try {
+    # delete current setup if VoltPlus files already exist
+    if (Test-Path $maindir) {
+        Write-Host "existing VoltPlus user, deleting current setup..."
+        foreach ($file in $files) {
+            $filePath = Join-Path $maindir $file
+            if (Test-Path $filePath) {
+                Remove-Item -Path $filePath -Force
+            }
+        }
+        foreach ($folder in $folders) {
+            $folderPath = Join-Path $maindir $folder
+            if (Test-Path $folderPath) {
+                Remove-Item -Path $folderPath -Recurse -Force
+            }
+        }
+    }
+    else {
+        New-Item -ItemType Directory -Path $maindir -Force | Out-Null
+    }
+
+    # download VoltPlus files
+    Write-Host "downloading and setting up VoltPlus..."
     foreach ($file in $files) {
-        $filePath = Join-Path $maindir $file
-        if (Test-Path $filePath) {
-            Remove-Item -Path $filePath -Force
+        Invoke-WebRequest -Uri "$baseurl/$file" -OutFile "$maindir\$file"
+    }
+
+    # run the main batch script
+    if (Test-Path "$maindir\VoltPlus.bat") {
+        Start-Process cmd.exe -ArgumentList "/c", "call `"$maindir\VoltPlus.bat`" || pause" -WindowStyle Normal
+        Stop-Process -Id $pid -Force
+    }
+    else {
+        Write-Host "VoltPlus.bat NOT FOUND. did Defender falsely flag and delete it?" -ForegroundColor Red
+        Read-Host "`npress enter to close"
+        exit 1
+    }
+}
+catch {
+    $err = $_
+    Write-Host "`nplease show this message to tainted (@zlsb) on discord" -ForegroundColor Red
+    Write-Host "ERROR: $($err.Exception.Message)" -ForegroundColor Red
+    if ($err.InvocationInfo) {
+        $invocation = $err.InvocationInfo
+        Write-Host "errored at line number: $($invocation.ScriptLineNumber)" -ForegroundColor Yellow
+        if ($PSCommandPath) {
+            Write-Host "running script path: $PSCommandPath" -ForegroundColor Red
+        }
+        else {
+            Write-Host "running script isn't on disk."
+        }
+        Write-Host "errored line of code:" -ForegroundColor Yellow
+        Write-Host "$($invocation.Line.Trim())" -ForegroundColor Red
+        try {
+            $expanded = $ExecutionContext.InvokeCommand.ExpandString($invocation.Line).Trim()
+            if ($expanded) {
+                Write-Host "errored line of code at runtime:" -ForegroundColor Yellow
+                Write-Host "$expanded" -ForegroundColor Red
+            }
+        }
+        catch {
+            Write-Host "could not expand variables in this scope."
         }
     }
-    $folders = @("webview", "py", "src")
-    foreach ($folder in $folders) {
-        $folderPath = Join-Path $maindir $folder
-        if (Test-Path $folderPath) {
-            Remove-Item -Path $folderPath -Recurse -Force
-        }
-    }
-}
-else {
-    New-Item -ItemType Directory -Path $maindir -Force | Out-Null
-}
-
-#download VE files and run the main batch script
-Write-Host "downloading and setting up VoltEnhanced.."
-foreach ($file in $files) {
-    Invoke-WebRequest -Uri "$baseurl/$file" -OutFile "$maindir\$file"
-}
-
-if (Test-Path "$maindir\VoltEnhanced.bat") {
-    Start-Process cmd.exe -ArgumentList "/c", "call `"$maindir\VoltEnhanced.bat`" || pause" -WindowStyle Normal
-    Stop-Process -Id $pid -Force
-}
-else {
-    Write-Host "VoltEnhanced.bat NOT FOUND. did defender falsely flag and delete it?"
-    pause
+    Read-Host "`npress enter to close"
     exit 1
 }
