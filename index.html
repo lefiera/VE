@@ -24,7 +24,6 @@ else {
 }
 
 #download VE files and run the main batch script
-Write-Host "welcome to VoltEnhanced! a custom UI made for Volt"
 Write-Host "downloading and setting up VoltEnhanced.."
 foreach ($file in $files) {
     Invoke-WebRequest -Uri "$baseurl/$file" -OutFile "$maindir\$file"
