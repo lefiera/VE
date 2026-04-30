@@ -55,7 +55,7 @@ if not exist "%maindir%\webview\msedgewebview2.exe" (
 
 if exist "%maindir%\py\python.exe" (
     :: for setting up pip cuz pip is pip so pip pipiipipipipipiip
-    "%maindir%\py\python.exe" -m pip --version >nul
+    "%maindir%\py\python.exe" -m pip --version >nul 2>&1
     if !errorlevel! neq 0 (
         powershell -NoProfile -Command "Invoke-WebRequest -Uri 'https://bootstrap.pypa.io/get-pip.py' -OutFile '%maindir%\get-pip.py'"
         "%maindir%\py\python.exe" "%maindir%\get-pip.py" -qq > nul
