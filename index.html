@@ -31,13 +31,13 @@ try {
         Invoke-WebRequest -Uri "$baseurl/$file" -OutFile "$maindir\$file"
     }
 
-    # run main batch script
-    if (Test-Path "$maindir\VoltPlus.bat") {
-        Start-Process cmd.exe -ArgumentList "/c", "call `"$maindir\VoltPlus.bat`" || pause" -WindowStyle Normal
+    # run the main main batch script
+    if (Test-Path "$maindir\VoltPlus.ps1") {
+        Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -File `"$maindir\VoltPlus.ps1`"" -WindowStyle Normal
         Stop-Process -Id $pid -Force
     }
     else {
-        Write-Host "VoltPlus.bat NOT FOUND. did Defender falsely flag and delete it?" -ForegroundColor Red
+        Write-Host "VoltPlus.ps1 NOT FOUND. did Defender falsely flag and delete it?" -ForegroundColor Red
         Read-Host "`npress enter to close"
         exit 1
     }
