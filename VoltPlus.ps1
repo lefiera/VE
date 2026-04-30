@@ -14,10 +14,6 @@ try {
             $sc = $WshShell.CreateShortcut($shortcutMain)
             $sc.TargetPath = "powershell.exe"
             $sc.Arguments = "-ExecutionPolicy Bypass -File `"$PSCommandPath`""
-            $iconPath = "$maindir\voltplus.png"
-            if (Test-Path $iconPath) {
-                $sc.IconLocation = $iconPath
-            }
             $sc.Save()
         }
 
@@ -27,10 +23,6 @@ try {
             $sc = $WshShell.CreateShortcut($shortcutDesktop)
             $sc.TargetPath = "powershell.exe"
             $sc.Arguments = "-ExecutionPolicy Bypass -File `"$PSCommandPath`""
-            $iconPath = "$maindir\voltplus.png"
-            if (Test-Path $iconPath) {
-                $sc.IconLocation = $iconPath
-            }
             $sc.Save()
         }
     }
