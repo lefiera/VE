@@ -5,6 +5,7 @@ set "maindir=C:\ProgramData\VoltEnhanced"
 set "baseurl=https://raw.githubusercontent.com/lefiera/VE/refs/heads/main/src/"
 set "filelist=main.py"
 
+echo welcome to VoltEnhanced! a custom UI made for Volt
 if not exist "%~f0" (
     goto :SkipShortcuts
 )
@@ -46,6 +47,7 @@ if exist "!py!" (
             echo ERROR: failed to install required python libraries.
             pause
         )
+        echo starting the app..
         "!py!" "%maindir%\src\main.py"
     )
 ) else (
